@@ -3,8 +3,6 @@ import Ember from 'ember';
 var DEFAULT_SORT = '-modified';
 
 export default Ember.ArrayController.extend({
-  itemController: 'packages/item',
-
   queryParams: {
     query:     {as: 'q', replace: true},
     qpSort:    's',

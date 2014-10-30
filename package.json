@@ -27,6 +27,7 @@
     "ember-cli-qunit": "0.1.0",
     "ember-img-cache": "0.0.2",
     "ember-moment": "^0.1.0",
+    "ember-sortable-collection-view": "huafu/ember-sortable-collection-view#c01f31a1ba",
     "express": "^4.8.5",
     "glob": "^4.0.5"
   }

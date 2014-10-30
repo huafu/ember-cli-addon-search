@@ -32,42 +32,10 @@
           </th>
         </tr>
         </thead>
-        <tbody>
         {{#if hasMatch}}
-          {{#each}}
-            <tr {{bind-attr class='matchFilters::hidden'}}>
-              <td class="cell-name">
-                <a href="{{unbound npmUrl}}"
-                   target="_blank"
-                   class="package-link">{{unbound name}}</a>
-                {{#unboundIf isNew}}
-                  <div class="new-package">NEW</div>
-                {{/unboundIf}}
-                <div class="description">
-                  {{unbound description}}
-                </div>
-                {{img githubRepo.travisBadgeUrl class="travis-badge"}}
-                <br class="visible-xs"><br class="visible-xs">
-                <ul class="list-inline visible-xs list-package-details">
-                  <li>Owner: <a target="_blank"
-                                href="{{unbound owner.profileUrl}}">{{unbound owner.name}}</a></li>
-                  <li>Downloads: {{unbound digit-grouping downloadedCount}}</li>
-                  <li>Updated: {{unbound ago modifiedAt "LLLL"}}</li>
-                </ul>
-              </td>
-              <td class="cell-gravatar hidden-xs">
-                {{img owner.gravatarUrl class="gravatar"}}
-                <a target="_blank" href="{{unbound owner.profileUrl}}">{{unbound owner.name}}</a>
-              </td>
-              <td class="cell-downloads hidden-xs">
-                {{unbound digit-grouping downloadedCount}}
-              </td>
-              <td class="cell-updated hidden-xs">
-                {{unbound ago modifiedAt "LLLL"}}
-              </td>
-            </tr>
-          {{/each}}
+          {{view 'table-body' content=model sortProperties=sortProperties sortAscending=sortAscending}}
         {{else}}
+          <tbody>
           <tr>
             <td colspan="4">
               <p class="not-found">
@@ -79,8 +47,8 @@
               </p>
             </td>
           </tr>
+          </tbody>
         {{/if}}
-        </tbody>
       </table>
     </div>
   </div>
