@@ -6,8 +6,8 @@ export default Ember.ArrayController.extend({
   itemController: 'packages/item',
 
   queryParams: {
-    query: {as: 'q', replace: true},
-    qpSort: 's',
+    query:     {as: 'q', replace: true},
+    qpSort:    's',
     qpReverse: 'r'
   },
 
@@ -15,13 +15,13 @@ export default Ember.ArrayController.extend({
   sortAscending:  true,
 
   // used to show the user if a filtering is scheduled or not
-  isFiltering: false,
+  isFiltering:    false,
 
   // used by query parameters and the match method in the item controllers
   query:          '',
 
   // beautify or parse the sort QP
-  qpSort: function (key, value) {
+  qpSort:         function (key, value) {
     if (arguments.length > 1) {
       this.set('sortProperties', ['-' + value]);
     }
@@ -29,7 +29,7 @@ export default Ember.ArrayController.extend({
   }.property('sortProperties.firstObject'),
 
   // beatify or parse the sort order QP
-  qpReverse: function (key, value) {
+  qpReverse:      function (key, value) {
     if (arguments.length > 1) {
       this.set('sortAscending', !value);
     }
@@ -37,10 +37,10 @@ export default Ember.ArrayController.extend({
   }.property('sortAscending'),
 
   // used by the input box
-  searchInput: function (key, value) {
+  searchInput:    function (key, value) {
     if (arguments.length > 1) {
       this.set('isFiltering', true);
-      Ember.run.debounce(this, 'updateQuery', value, 300);
+      Ember.run.debounce(this, 'updateQuery', value, 100);
     }
     else {
       value = this.get('query');
@@ -48,17 +48,32 @@ export default Ember.ArrayController.extend({
     return value;
   }.property('query'),
 
+  // filter content
+  model:          function () {
+    var query = (this.get('query') || '').trim().toLowerCase();
+    return (this.get('sourceContent') || []).filter(function (item) {
+      return !query ||
+        item.get('-name').indexOf(query) >= 0 ||
+        item.get('-owner').indexOf(query) >= 0 ||
+        item.get('-description').indexOf(query) >= 0;
+    });
+  }.property(
+    // we don't need to listen for @each since our content will never change or be totally updated
+    'sourceContent', 'query'
+  ).readOnly(),
+
   // in a function so that we can debounce it => the filtering and refreshing of URL isn't done on
   // each char
-  updateQuery: function (value) {
-    this.set('isFiltering', false);
+  updateQuery:    function (value) {
     this.set('query', value || '');
+    this.set('isFiltering', false);
   },
 
+  // our filtered content
+  sourceContent:  null,
+
   // whether we have some items matching the filters or not
-  hasMatch: function () {
-    return !!this.findBy('matchFilters', true);
-  }.property('@each.matchFilters').readOnly(),
+  hasMatch:       Ember.computed.bool('length'),
 
   actions: {
     // used in the table headers to sort
